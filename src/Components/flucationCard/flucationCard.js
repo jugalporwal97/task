@@ -21,6 +21,7 @@ class FCard extends Component {
             {this.props.topdata.map((ele) => {
               return (
                 <Flucationbar
+                  key={ele.name}
                   name={ele.name}
                   percentage={ele.fluctuation}
                   color={this.props.color}

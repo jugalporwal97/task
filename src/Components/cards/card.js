@@ -20,7 +20,7 @@ class Card extends Component {
           <div className="inline">
             {this.props.topdata.map((ele) => {
               return (
-                <Progressbar name={ele.name} percentage={ele.margin} color={this.props.color} />
+                <Progressbar key={ele.name} name={ele.name} percentage={ele.margin} color={this.props.color} />
               );
             })}
           </div>

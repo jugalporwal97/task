@@ -1,8 +1,9 @@
-import React, {Component, Fragment} from "react";
+import React, {Component} from "react";
 import "./tabs3.css";
 import Table from "../Table/Table";
 import {getRequest} from "../../Services/get";
 import InfiniteScroll from "react-infinite-scroller";
+
 class Tabs3 extends Component {
   state = {
     activeindex: 1,
@@ -16,9 +17,29 @@ class Tabs3 extends Component {
   handleClick(value) {
     this.setState({activeindex: value});
   }
+  setCheck = (id, value) => {
+    this.setState((prv) => {
+      return {data: {...prv.data, [id]: {...prv.data[id], checked: value}}};
+    });
+  };
+  selectAll = (value) => {
+    console.log("selectvalue", value);
+    this.setState(
+      (prv) => {
+        return {
+          data: Object.values(prv.data).reduce((acc, ele) => {
+            acc[ele.id] = {...ele, checked: value};
+            return acc;
+          }, {}),
+        };
+      },
+      () => {
+        console.log("callback", this.state.data);
+      }
+    );
+  };
 
   componentDidMount() {
-    console.log(">>>compdid");
     getRequest(
       `https://beta.eagleowl.in/api/v1/mock/organization/18/outlet/18/recipe/recipes/?page=${this.state.pagenumber}`
     )
@@ -28,7 +49,7 @@ class Tabs3 extends Component {
             total: response.count,
             pagenumber: prv.pagenumber + 1,
             data: response.results.reduce((acc, ele) => {
-              acc[ele.id] = ele;
+              acc[ele.id] = {...ele, checked: false};
               return acc;
             }, {}),
             loading: false,
@@ -39,7 +60,6 @@ class Tabs3 extends Component {
   }
 
   loadMore = () => {
-    console.log(">>>load");
     if (this.state.loading) {
       return;
     }
@@ -57,7 +77,7 @@ class Tabs3 extends Component {
             data: {
               ...prv.data,
               ...response.results.reduce((acc, ele) => {
-                acc[ele.id] = ele;
+                acc[ele.id] = {...ele, checked: false};
                 return acc;
               }, {}),
             },
@@ -85,25 +105,25 @@ class Tabs3 extends Component {
       <div>
         <div className="tabsinline">
           <div
-            className={`tabs parallelogram ${this.state.activeindex == 1 ? "active" : "inactive"}`}
+            className={`tabs parallelogram ${this.state.activeindex === 1 ? "active" : "inactive"}`}
             onClick={() => this.handleClick(1)}
           >
             ALL RECIPE(S)
           </div>
           <div
-            className={`tabs parallelogram ${this.state.activeindex == 2 ? "active" : "inactive"}`}
+            className={`tabs parallelogram ${this.state.activeindex === 2 ? "active" : "inactive"}`}
             onClick={() => this.handleClick(2)}
           >
             INCORRECT
           </div>
           <div
-            className={`tabs parallelogram ${this.state.activeindex == 3 ? "active" : "inactive"}`}
+            className={`tabs parallelogram ${this.state.activeindex === 3 ? "active" : "inactive"}`}
             onClick={() => this.handleClick(3)}
           >
             UNTAGGED
           </div>
           <div
-            className={`tabs parallelogram ${this.state.activeindex == 4 ? "active" : "inactive"}`}
+            className={`tabs parallelogram ${this.state.activeindex === 4 ? "active" : "inactive"}`}
             onClick={() => this.handleClick(4)}
           >
             DISABLED
@@ -120,7 +140,7 @@ class Tabs3 extends Component {
               </div>
             }
           >
-            <Table data={fliteredData} />
+            <Table data={fliteredData} setCheck={this.setCheck} selectAll={this.selectAll} />
           </InfiniteScroll>
         </div>
       </div>
