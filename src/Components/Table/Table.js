@@ -117,27 +117,33 @@ class Table extends Component {
           </tr>
         </thead>
         <tbody>
-          {this.props.data.map((ele) => {
-            return (
-              <tr key={ele.id}>
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={ele.checked}
-                    onChange={() => {
-                      this.handleCheckBox(ele);
-                    }}
-                  />
-                </td>
-                <td>{ele.name}</td>
-                <td>{moment(ele.last_updated.date).format("MMM Do YYYY")}</td>
-                <td>{ele.cogs}</td>
-                <td>{ele.cost_price.toFixed(2)}</td>
-                <td>{ele.sale_price.toFixed(2)}</td>
-                <td>{ele.gross_margin.toFixed(2)}</td>
-              </tr>
-            );
-          })}
+          {this.props.data.length >= 1 ? (
+            this.props.data.map((ele) => {
+              return (
+                <tr key={ele.id}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={ele.checked}
+                      onChange={() => {
+                        this.handleCheckBox(ele);
+                      }}
+                    />
+                  </td>
+                  <td>{ele.name}</td>
+                  <td>{moment(ele.last_updated.date).format("MMM Do YYYY")}</td>
+                  <td>{ele.cogs}</td>
+                  <td>{ele.cost_price.toFixed(2)}</td>
+                  <td>{ele.sale_price.toFixed(2)}</td>
+                  <td>{ele.gross_margin.toFixed(2)}</td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td>NO Records to show!</td>
+            </tr>
+          )}
         </tbody>
       </table>
     );
